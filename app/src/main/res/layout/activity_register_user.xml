@@ -22,15 +22,35 @@
         android:inputType="textPassword"
         android:hint="Password"/>
 
+    <EditText
+        android:id="@+id/edittext_confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edittext_register_password"
+        android:hint="Confirm password"/>
+
+
     <Button
         android:id="@+id/btn_register_user"
         android:text="Register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edittext_register_password"
+        android:layout_below="@+id/edittext_confirm_password"
         android:layout_centerHorizontal="true"
         android:onClick="btnRegisterUser"/>
 
+    <RelativeLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -2,6 +2,13 @@
     <string name="facebook_app_id">[479167156283222]</string>
     <string name="fb_login_protocol_scheme">fb[fb479167156283222]</string>
 
+    <string name="invalid_email_txt">invalid email input</string>
+    <string name="password_not_match_toast">Password doesn\'t match</string>
+    <string name="all_field_toast">You have to fill all the fields"</string>
+    <string name="too_short_password_toast">password too short, need to be atleast 6 characters</string>
+    <string name="unable_register_toast">Unable to register</string>
+    <string name="db_users">users</string>
+
     <string name="app_name">Picified</string>
 
     <!-- TODO: Remove or change this placeholder text -->

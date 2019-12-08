@@ -25,8 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    CallbackManager callbackManager;
-    LoginButton btnLoginFacebook;
+
 
     EditText userEmail;
     EditText userPassword;
@@ -40,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        callbackManager = CallbackManager.Factory.create();
+
         userEmail = findViewById(R.id.edittext_username);
         userPassword = findViewById(R.id.edittext_password);
         btnLogin = findViewById(R.id.btn_login);
-        btnLoginFacebook = findViewById(R.id.btn_login_facebook);
+
 
         setupFirebaseAuth();
 
@@ -52,12 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override // Check if user is signed in and update ui
-    protected void onStart() {
-        super.onStart();
-        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
-        Log.d(TAG, "onStart: User was already signed in, calling homescreen");
-    }
+
 
     public void txtRegisterUser(View view) {
         Intent intent = new Intent(MainActivity.this, RegisterUserActivity.class);
@@ -95,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void setupFirebaseAuth() { //sets up a firebase Authentication listener
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -113,5 +108,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    @Override //Check if user is signed in and update ui
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
+    }
+
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.picified.Fragments;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -16,11 +17,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.picified.Activities.FragmentsHandlerActivity;
+import com.example.picified.Activities.PictureViewActivity;
 import com.example.picified.Activities.SettingsActivity;
 import com.example.picified.Classes.User;
 import com.example.picified.R;
@@ -41,6 +44,10 @@ public class ProfileFragment extends Fragment {
     String userPhotoUrl;
     String userName;
     String userEmail;
+    CalendarView calendarView;
+
+    FirebaseUser fuser;
+    DatabaseReference reference;
 
     Toolbar mToolbar;
 
@@ -60,11 +67,24 @@ public class ProfileFragment extends Fragment {
         init(view);
         setCurrentUser();
 
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+               String a = Integer.toString(year);
+               a = a + Integer.toString(month);
+               a = a + Integer.toString(dayOfMonth);
+               pictureViewActivity(a);
+            }
+        });
+
+
+
 
 
         return view;
     }
 
+    //Initiate all variables and views
     private void init (View view) {
         setHasOptionsMenu(true);
 
@@ -72,10 +92,11 @@ public class ProfileFragment extends Fragment {
         userNameText = view.findViewById(R.id.text_username_profile);
         userEmailText = view.findViewById(R.id.text_useremail_profile);
         mToolbar = view.findViewById(R.id.profile_toolbar);
-        setCurrentUser();
+        calendarView = view.findViewById(R.id.calendarView_profile);
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
     }
 
+    //Method for setting up the current user
     private void setCurrentUser() {
         FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users").child(fuser.getUid());
@@ -84,13 +105,15 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
+                if (isVisible() && user != null) {
+                    userName = user.getName();
+                    Glide.with(getActivity()).load(user.getProfile_picture()).into(profilePicture);
+                    userEmailText.setText(user.getEmail());
+                    userNameText.setText(user.getName());
+                    //set all attributes.
 
-                userPhotoUrl = user.getProfile_picture();
-                userEmail = user.getEmail();
-                userName = user.getName();
-                userNameText.setText(user.getName()); //TEST
-                userEmailText.setText(user.getEmail());
-                Glide.with(ProfileFragment.this).load(user.getProfile_picture()).into(profilePicture);
+
+                }
             }
 
             @Override
@@ -129,5 +152,11 @@ public class ProfileFragment extends Fragment {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void pictureViewActivity(String a) {
+        Intent intent = new Intent(getActivity(), PictureViewActivity.class);
+        intent.putExtra("a", a);
+        startActivity(intent);
     }
 }
